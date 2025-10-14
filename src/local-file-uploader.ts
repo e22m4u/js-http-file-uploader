@@ -171,7 +171,7 @@ export class LocalFileUploader extends DebuggableService {
       });
       form.parse(req, (err, fields, files) => {
         if (err) return;
-        const uploadedFiles: File[] = files[field] || [];
+        const uploadedFiles: File[] = ([] as File[]).concat(files[field] || []);
         if (!uploadedFiles.length) {
           return reject(
             createError(
@@ -202,6 +202,7 @@ export class LocalFileUploader extends DebuggableService {
             HttpErrors.BadRequest,
             'INVALID_FILE',
             localizer.t(`${errorKeyPrefix}.invalidFileError`),
+            {originalFileName},
           );
         }
         debugWo1('Detected MIME was %v (.%s).', fileType.mime, fileType.ext);

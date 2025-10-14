@@ -378,7 +378,7 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
       form.parse(req, (err, fields, files2) => {
         if (err)
           return;
-        const uploadedFiles = files2[field] || [];
+        const uploadedFiles = [].concat(files2[field] || []);
         if (!uploadedFiles.length) {
           return reject(createError(import_http_errors.default.BadRequest, "NOTHING_TO_UPLOAD", localizer.t(`${errorKeyPrefix}.nothingToUploadError`)));
         }
@@ -396,7 +396,7 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
         debugWo1("Detecting real file type.");
         const fileType = await getRealFileType(file);
         if (!fileType) {
-          throw createError(import_http_errors.default.BadRequest, "INVALID_FILE", localizer.t(`${errorKeyPrefix}.invalidFileError`));
+          throw createError(import_http_errors.default.BadRequest, "INVALID_FILE", localizer.t(`${errorKeyPrefix}.invalidFileError`), { originalFileName });
         }
         debugWo1("Detected MIME was %v (.%s).", fileType.mime, fileType.ext);
         const resourceName = (0, import_crypto.randomBytes)(16).toString("hex");
