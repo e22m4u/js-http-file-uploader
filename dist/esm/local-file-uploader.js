@@ -88,23 +88,18 @@ export class LocalFileUploader extends DebuggableService {
         const thumbnailService = this.getService(ThumbnailService);
         const errorKeyPrefix = `${LocalFileUploader.name}.${this.uploadFilesFromRequest.name}`;
         debug('Uploading files.');
-        const maxTotalFileSize = this.options.maxFilesNumber * this.options.maxFileSize;
         const form = formidable({
             uploadDir: os.tmpdir(),
             keepExtensions: true,
             maxFiles: this.options.maxFilesNumber,
             maxFileSize: this.options.maxFileSize,
-            maxTotalFileSize,
+            maxTotalFileSize: 0,
         });
         const createdResourceDirs = [];
         const fileDataList = [];
         const files = await new Promise((resolve, reject) => {
             form.on('error', err => {
                 switch (err.code) {
-                    // maxTotalFileSize
-                    case 1009: {
-                        return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFilesSizeError`), undefined, formatBytes(maxTotalFileSize)));
-                    }
                     // maxFiles
                     case 1015: {
                         return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), undefined, this.options.maxFilesNumber));

@@ -246,7 +246,6 @@ var import_js_localizer = require("@e22m4u/js-localizer");
 var en_default = {
   "LocalFileUploader.uploadFilesFromRequest.fileUploadError": "Error occurred while file uploading.",
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "The file is too large. Maximum file size is %s.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "Total files size is too large. Maximum size is %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Too many files. The maximum number of files is %d.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "No files found to upload.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "The file is corrupted or in an unsupported format."
@@ -256,7 +255,6 @@ var en_default = {
 var ru_default = {
   "LocalFileUploader.uploadFilesFromRequest.fileUploadError": "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0435 \u0444\u0430\u0439\u043B\u0430.",
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "\u0424\u0430\u0439\u043B \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0439. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 \u0444\u0430\u0439\u043B\u0430 %s.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "\u041E\u0431\u0449\u0438\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 \u0444\u0430\u0439\u043B\u043E\u0432 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0439. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E \u0444\u0430\u0439\u043B\u043E\u0432. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0444\u0430\u0439\u043B\u043E\u0432 %d.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "\u0424\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "\u0424\u0430\u0439\u043B \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0435\u043D \u0438\u043B\u0438 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442."
@@ -348,23 +346,18 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
     const thumbnailService = this.getService(ThumbnailService);
     const errorKeyPrefix = `${_LocalFileUploader.name}.${this.uploadFilesFromRequest.name}`;
     debug("Uploading files.");
-    const maxTotalFileSize = this.options.maxFilesNumber * this.options.maxFileSize;
     const form = (0, import_formidable.default)({
       uploadDir: os.tmpdir(),
       keepExtensions: true,
       maxFiles: this.options.maxFilesNumber,
       maxFileSize: this.options.maxFileSize,
-      maxTotalFileSize
+      maxTotalFileSize: 0
     });
     const createdResourceDirs = [];
     const fileDataList = [];
     const files = await new Promise((resolve2, reject) => {
       form.on("error", (err) => {
         switch (err.code) {
-          // maxTotalFileSize
-          case 1009: {
-            return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesSizeError`), void 0, formatBytes(maxTotalFileSize)));
-          }
           // maxFiles
           case 1015: {
             return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), void 0, this.options.maxFilesNumber));
