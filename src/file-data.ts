@@ -2,8 +2,8 @@
  * File data.
  */
 export type FileData = {
-  name?: string;
-  mime?: string;
+  fileName?: string;
+  mimeType?: string;
   originalName?: string;
   bytes?: number;
   thumbs?: Record<string, string>;

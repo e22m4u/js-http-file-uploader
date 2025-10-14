@@ -230,8 +230,8 @@ export class LocalFileUploader extends DebuggableService {
         debugWo1('Final file name was %v.', finalFileName);
         // формирование данных файла
         const fileData: FileData = {
-          name: finalFileName,
-          mime: fileType.mime,
+          fileName: finalFileName,
+          mimeType: fileType.mime,
           originalName: originalFileName,
           bytes: file.size,
           thumbs: {},

@@ -409,8 +409,8 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
         const finalFileName = `file.${fileType.ext}`;
         debugWo1("Final file name was %v.", finalFileName);
         const fileData = {
-          name: finalFileName,
-          mime: fileType.mime,
+          fileName: finalFileName,
+          mimeType: fileType.mime,
           originalName: originalFileName,
           bytes: file.size,
           thumbs: {}
