@@ -1,7 +1,7 @@
 {
   "LocalFileUploader.uploadFilesFromRequest.fileUploadError": "Error occurred while file uploading.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "The file is too large. Maximum file size is %s.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Too many files. The maximum number of files is %d.",
+  "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "The file size must not exceed %s.",
+  "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "The number of files to upload must not exceed %d.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "No files found to upload.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "The file is corrupted or in an unsupported format."
 }

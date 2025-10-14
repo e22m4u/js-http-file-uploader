@@ -1,7 +1,7 @@
 {
   "LocalFileUploader.uploadFilesFromRequest.fileUploadError": "Произошла ошибка при загрузке файла.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "Файл слишком большой. Максимальный размер файла %s.",
-  "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Слишком много файлов. Максимальное количество файлов %d.",
+  "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "Размер файла не должен превышать %s.",
+  "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Количество загружаемых файлов не должно превышать %d.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "Файлы для загрузки не найдены.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "Файл поврежден или имеет неподдерживаемый формат."
 }
