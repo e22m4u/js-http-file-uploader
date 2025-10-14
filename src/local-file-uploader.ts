@@ -290,6 +290,14 @@ export class LocalFileUploader extends DebuggableService {
         // пополнение результирующего массива
         fileDataList.push(fileData);
       }
+      debug(
+        numWords(
+          files.length,
+          'One file has been uploaded.',
+          '%d files have been uploaded.',
+        ),
+        files.length,
+      );
       return fileDataList;
     } catch (error) {
       debug('An error occurred during processing.');

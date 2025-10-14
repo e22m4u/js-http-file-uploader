@@ -447,6 +447,7 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
         }
         fileDataList.push(fileData);
       }
+      debug((0, import_js_localizer2.numWords)(files.length, "One file has been uploaded.", "%d files have been uploaded."), files.length);
       return fileDataList;
     } catch (error) {
       debug("An error occurred during processing.");
