@@ -116,12 +116,14 @@ export class LocalFileUploader extends DebuggableService {
     const thumbnailService = this.getService(ThumbnailService);
     const errorKeyPrefix = `${LocalFileUploader.name}.${this.uploadFilesFromRequest.name}`;
     debug('Uploading files.');
+    const maxTotalFileSize =
+      this.options.maxFilesNumber * this.options.maxFileSize;
     const form = formidable({
       uploadDir: os.tmpdir(),
       keepExtensions: true,
       maxFiles: this.options.maxFilesNumber,
       maxFileSize: this.options.maxFileSize,
-      maxTotalFileSize: 0,
+      maxTotalFileSize,
     });
     const createdResourceDirs: string[] = [];
     const fileDataList: FileData[] = [];
@@ -135,19 +137,22 @@ export class LocalFileUploader extends DebuggableService {
                 HttpErrors.PayloadTooLarge,
                 'PAYLOAD_TOO_LARGE',
                 localizer.t(`${errorKeyPrefix}.maxFilesNumberError`),
-                undefined,
+                {reason: err.message, errorCode: err.code},
                 this.options.maxFilesNumber,
               ),
             );
           }
+          // maxTotalFileSize
+          case 1009:
           // maxFileSize
+          // eslint-disable-next-line no-fallthrough
           case 1016: {
             return reject(
               createError(
                 HttpErrors.PayloadTooLarge,
                 'PAYLOAD_TOO_LARGE',
                 localizer.t(`${errorKeyPrefix}.maxFileSizeError`),
-                undefined,
+                {reason: err.message, errorCode: err.code},
                 formatBytes(this.options.maxFileSize),
               ),
             );

@@ -88,12 +88,13 @@ export class LocalFileUploader extends DebuggableService {
         const thumbnailService = this.getService(ThumbnailService);
         const errorKeyPrefix = `${LocalFileUploader.name}.${this.uploadFilesFromRequest.name}`;
         debug('Uploading files.');
+        const maxTotalFileSize = this.options.maxFilesNumber * this.options.maxFileSize;
         const form = formidable({
             uploadDir: os.tmpdir(),
             keepExtensions: true,
             maxFiles: this.options.maxFilesNumber,
             maxFileSize: this.options.maxFileSize,
-            maxTotalFileSize: 0,
+            maxTotalFileSize,
         });
         const createdResourceDirs = [];
         const fileDataList = [];
@@ -102,11 +103,14 @@ export class LocalFileUploader extends DebuggableService {
                 switch (err.code) {
                     // maxFiles
                     case 1015: {
-                        return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), undefined, this.options.maxFilesNumber));
+                        return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), { reason: err.message, errorCode: err.code }, this.options.maxFilesNumber));
                     }
+                    // maxTotalFileSize
+                    case 1009:
                     // maxFileSize
+                    // eslint-disable-next-line no-fallthrough
                     case 1016: {
-                        return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFileSizeError`), undefined, formatBytes(this.options.maxFileSize)));
+                        return reject(createError(HttpErrors.PayloadTooLarge, 'PAYLOAD_TOO_LARGE', localizer.t(`${errorKeyPrefix}.maxFileSizeError`), { reason: err.message, errorCode: err.code }, formatBytes(this.options.maxFileSize)));
                     }
                     default: {
                         return reject(createError(HttpErrors.BadRequest, 'FILE_UPLOAD_FAILED', localizer.t(`${errorKeyPrefix}.fileUploadError`), { reason: err.message, errorCode: err.code }));
