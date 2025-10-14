@@ -3,7 +3,6 @@
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "The file is too large. Maximum file size is %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "Total files size is too large. Maximum size is %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Too many files. The maximum number of files is %d.",
-  "LocalFileUploader.uploadFilesFromRequest.bodyParsingError": "Failed to process the request.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "No files found to upload.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "The file is corrupted or in an unsupported format."
 }

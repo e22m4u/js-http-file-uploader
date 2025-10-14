@@ -129,66 +129,57 @@ export class LocalFileUploader extends DebuggableService {
     const fileDataList: FileData[] = [];
     const files = await new Promise<File[]>((resolve, reject) => {
       form.on('error', err => {
-        return reject(
-          createError(
-            HttpErrors.BadRequest,
-            'FILE_UPLOAD_FAILED',
-            localizer.t(`${errorKeyPrefix}.fileUploadError`),
-            {reason: err.message},
-          ),
-        );
-      });
-      form.parse(req, (err, fields, files) => {
-        if (err) {
-          switch (err.code) {
-            // maxTotalFileSize
-            case 1009: {
-              return reject(
-                createError(
-                  HttpErrors.PayloadTooLarge,
-                  'PAYLOAD_TOO_LARGE',
-                  localizer.t(`${errorKeyPrefix}.maxFilesSizeError`),
-                  undefined,
-                  formatBytes(maxTotalFileSize),
-                ),
-              );
-            }
-            // maxFiles
-            case 1015: {
-              return reject(
-                createError(
-                  HttpErrors.PayloadTooLarge,
-                  'PAYLOAD_TOO_LARGE',
-                  localizer.t(`${errorKeyPrefix}.maxFilesNumberError`),
-                  undefined,
-                  this.options.maxFilesNumber,
-                ),
-              );
-            }
-            // maxFileSize
-            case 1016: {
-              return reject(
-                createError(
-                  HttpErrors.PayloadTooLarge,
-                  'PAYLOAD_TOO_LARGE',
-                  localizer.t(`${errorKeyPrefix}.maxFileSizeError`),
-                  undefined,
-                  formatBytes(this.options.maxFileSize),
-                ),
-              );
-            }
-            default: {
-              return reject(
-                createError(
-                  HttpErrors.BadRequest,
-                  'BODY_PARSING_ERROR',
-                  localizer.t(`${errorKeyPrefix}.bodyParsingError`),
-                  {reason: err.message},
-                ),
-              );
-            }
+        switch (err.code) {
+          // maxTotalFileSize
+          case 1009: {
+            return reject(
+              createError(
+                HttpErrors.PayloadTooLarge,
+                'PAYLOAD_TOO_LARGE',
+                localizer.t(`${errorKeyPrefix}.maxFilesSizeError`),
+                undefined,
+                formatBytes(maxTotalFileSize),
+              ),
+            );
+          }
+          // maxFiles
+          case 1015: {
+            return reject(
+              createError(
+                HttpErrors.PayloadTooLarge,
+                'PAYLOAD_TOO_LARGE',
+                localizer.t(`${errorKeyPrefix}.maxFilesNumberError`),
+                undefined,
+                this.options.maxFilesNumber,
+              ),
+            );
+          }
+          // maxFileSize
+          case 1016: {
+            return reject(
+              createError(
+                HttpErrors.PayloadTooLarge,
+                'PAYLOAD_TOO_LARGE',
+                localizer.t(`${errorKeyPrefix}.maxFileSizeError`),
+                undefined,
+                formatBytes(this.options.maxFileSize),
+              ),
+            );
+          }
+          default: {
+            return reject(
+              createError(
+                HttpErrors.BadRequest,
+                'FILE_UPLOAD_FAILED',
+                localizer.t(`${errorKeyPrefix}.fileUploadError`),
+                {reason: err.message, errorCode: err.code},
+              ),
+            );
           }
         }
+      });
+      form.parse(req, (err, fields, files) => {
+        if (err) return;
         const uploadedFiles: File[] = files[field] || [];
         if (!uploadedFiles.length) {
           return reject(

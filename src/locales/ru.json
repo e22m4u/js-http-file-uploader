@@ -3,7 +3,6 @@
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "Файл слишком большой. Максимальный размер файла %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "Общий размер файлов слишком большой. Максимальный размер %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Слишком много файлов. Максимальное количество файлов %d.",
-  "LocalFileUploader.uploadFilesFromRequest.bodyParsingError": "Не удалось обработать запрос.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "Файлы для загрузки не найдены.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "Файл поврежден или имеет неподдерживаемый формат."
 }

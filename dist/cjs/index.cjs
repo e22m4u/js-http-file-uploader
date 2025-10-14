@@ -248,7 +248,6 @@ var en_default = {
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "The file is too large. Maximum file size is %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "Total files size is too large. Maximum size is %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "Too many files. The maximum number of files is %d.",
-  "LocalFileUploader.uploadFilesFromRequest.bodyParsingError": "Failed to process the request.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "No files found to upload.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "The file is corrupted or in an unsupported format."
 };
@@ -259,7 +258,6 @@ var ru_default = {
   "LocalFileUploader.uploadFilesFromRequest.maxFileSizeError": "\u0424\u0430\u0439\u043B \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0439. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 \u0444\u0430\u0439\u043B\u0430 %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesSizeError": "\u041E\u0431\u0449\u0438\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 \u0444\u0430\u0439\u043B\u043E\u0432 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0439. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 %s.",
   "LocalFileUploader.uploadFilesFromRequest.maxFilesNumberError": "\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E \u0444\u0430\u0439\u043B\u043E\u0432. \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0444\u0430\u0439\u043B\u043E\u0432 %d.",
-  "LocalFileUploader.uploadFilesFromRequest.bodyParsingError": "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0437\u0430\u043F\u0440\u043E\u0441.",
   "LocalFileUploader.uploadFilesFromRequest.nothingToUploadError": "\u0424\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B.",
   "LocalFileUploader.uploadFilesFromRequest.invalidFileError": "\u0424\u0430\u0439\u043B \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0435\u043D \u0438\u043B\u0438 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442."
 };
@@ -362,28 +360,27 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
     const fileDataList = [];
     const files = await new Promise((resolve2, reject) => {
       form.on("error", (err) => {
-        return reject(createError(import_http_errors.default.BadRequest, "FILE_UPLOAD_FAILED", localizer.t(`${errorKeyPrefix}.fileUploadError`), { reason: err.message }));
-      });
-      form.parse(req, (err, fields, files2) => {
-        if (err) {
-          switch (err.code) {
-            // maxTotalFileSize
-            case 1009: {
-              return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesSizeError`), void 0, formatBytes(maxTotalFileSize)));
-            }
-            // maxFiles
-            case 1015: {
-              return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), void 0, this.options.maxFilesNumber));
-            }
-            // maxFileSize
-            case 1016: {
-              return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFileSizeError`), void 0, formatBytes(this.options.maxFileSize)));
-            }
-            default: {
-              return reject(createError(import_http_errors.default.BadRequest, "BODY_PARSING_ERROR", localizer.t(`${errorKeyPrefix}.bodyParsingError`), { reason: err.message }));
-            }
+        switch (err.code) {
+          // maxTotalFileSize
+          case 1009: {
+            return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesSizeError`), void 0, formatBytes(maxTotalFileSize)));
+          }
+          // maxFiles
+          case 1015: {
+            return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFilesNumberError`), void 0, this.options.maxFilesNumber));
+          }
+          // maxFileSize
+          case 1016: {
+            return reject(createError(import_http_errors.default.PayloadTooLarge, "PAYLOAD_TOO_LARGE", localizer.t(`${errorKeyPrefix}.maxFileSizeError`), void 0, formatBytes(this.options.maxFileSize)));
+          }
+          default: {
+            return reject(createError(import_http_errors.default.BadRequest, "FILE_UPLOAD_FAILED", localizer.t(`${errorKeyPrefix}.fileUploadError`), { reason: err.message, errorCode: err.code }));
           }
         }
+      });
+      form.parse(req, (err, fields, files2) => {
+        if (err)
+          return;
         const uploadedFiles = files2[field] || [];
         if (!uploadedFiles.length) {
           return reject(createError(import_http_errors.default.BadRequest, "NOTHING_TO_UPLOAD", localizer.t(`${errorKeyPrefix}.nothingToUploadError`)));
