@@ -3,7 +3,10 @@ import {promises as fs} from 'fs';
 /**
  * Move file.
  */
-export async function moveFile(filePath: string, newFilePath: string): Promise<void> {
+export async function moveFile(
+  filePath: string,
+  newFilePath: string,
+): Promise<void> {
   try {
     await fs.rename(filePath, newFilePath);
   } catch (error) {

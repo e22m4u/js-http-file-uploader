@@ -12,7 +12,7 @@ export const DEBUGGING_MODULE_NAME = 'jsHttpFileUploader';
 export class DebuggableService extends BaseDebuggableService {
   /**
    * Constructor.
-   * 
+   *
    * @param container
    */
   constructor(container?: ServiceContainer) {

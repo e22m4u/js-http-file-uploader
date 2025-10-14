@@ -34,8 +34,8 @@ export class LocalFileUploaderOptions {
 
   /**
    * Constructor.
-   * 
-   * @param input 
+   *
+   * @param input
    */
   constructor(input?: LocalFileUploaderOptions) {
     if (input) Object.assign(this, input);
@@ -128,7 +128,7 @@ export class LocalFileUploader extends DebuggableService {
     const createdResourceDirs: string[] = [];
     const fileDataList: FileData[] = [];
     const files = await new Promise<File[]>((resolve, reject) => {
-      form.on('error', (err) => {
+      form.on('error', err => {
         return reject(
           createError(
             HttpErrors.BadRequest,
@@ -152,7 +152,7 @@ export class LocalFileUploader extends DebuggableService {
                   formatBytes(maxTotalFileSize),
                 ),
               );
-            } 
+            }
             // maxFiles
             case 1015: {
               return reject(
@@ -238,7 +238,11 @@ export class LocalFileUploader extends DebuggableService {
         };
         // формирование адреса для загрузки файла
         const targetDir = path.resolve(this.options.targetDir);
-        const resourceDir = path.resolve(targetDir, container ?? '', resourceName);
+        const resourceDir = path.resolve(
+          targetDir,
+          container ?? '',
+          resourceName,
+        );
         if (container && !resourceDir.startsWith(targetDir)) {
           throw createError(
             HttpErrors.BadRequest,
@@ -257,7 +261,10 @@ export class LocalFileUploader extends DebuggableService {
         // перемещение временного файла в папку ресурса
         await moveFile(file.filepath, finalFilePath);
         // создание миниатюр
-        if (this.options.createThumbnails && this.options.thumbnailSizes.length) {
+        if (
+          this.options.createThumbnails &&
+          this.options.thumbnailSizes.length
+        ) {
           const canCreateThumbs = thumbnailService.canCreateThumbnails({
             mimetype: fileType.mime,
             extension: fileType.ext,
@@ -300,7 +307,7 @@ export class LocalFileUploader extends DebuggableService {
         files.map(file => {
           debug('Removing temporary file %v.', file.filepath);
           return removeFile(file.filepath);
-        })
+        }),
       );
       debug('Cleanup finished.');
       throw error;

@@ -26,10 +26,7 @@ export async function getRealFileType(
     // 4. Возвращаем результат
     return {mime: typeInfo.mime, ext: typeInfo.ext};
   } catch (error) {
-    console.error(
-      `Unable to detect file type of ${file.filepath}.`,
-      error,
-    );
+    console.error(`Unable to detect file type of ${file.filepath}.`, error);
     return null;
   }
 }

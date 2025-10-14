@@ -10,7 +10,7 @@ import ru from './locales/ru.json' with {type: 'json'};
 export class HttpFileUploaderLocalizer extends Localizer {
   /**
    * Constructor.
-   * 
+   *
    * @param container
    * @param options
    */

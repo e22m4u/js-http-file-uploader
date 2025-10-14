@@ -6,9 +6,7 @@ import {Errorf} from '@e22m4u/js-format';
  *
  * @param options
  */
-export async function createDirectory(
-  pathName: string,
-): Promise<void> {
+export async function createDirectory(pathName: string): Promise<void> {
   try {
     await fs.mkdir(pathName, {recursive: true});
   } catch (error) {

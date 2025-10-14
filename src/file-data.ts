@@ -7,4 +7,4 @@ export type FileData = {
   originalName?: string;
   bytes?: number;
   thumbs?: Record<string, string>;
-}
+};
