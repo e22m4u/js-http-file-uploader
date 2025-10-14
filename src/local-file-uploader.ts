@@ -306,7 +306,7 @@ export class LocalFileUploader extends DebuggableService {
       await Promise.all(
         createdResourceDirs.map(dir => {
           debug('Removing directory %v.', dir);
-          return removeFile(dir);
+          return removeFile(dir, true);
         }),
       );
       // удаление временных файлов загруженных formidable
@@ -314,7 +314,7 @@ export class LocalFileUploader extends DebuggableService {
       await Promise.all(
         files.map(file => {
           debug('Removing temporary file %v.', file.filepath);
-          return removeFile(file.filepath);
+          return removeFile(file.filepath, true);
         }),
       );
       debug('Cleanup finished.');

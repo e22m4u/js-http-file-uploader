@@ -1,6 +1,6 @@
 {
   "name": "@e22m4u/js-http-file-uploader",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Подключаемый сервис загрузки файлов для JavaScript",
   "author": "Mikhail Evstropov <e22m4u@yandex.ru>",
   "license": "MIT",

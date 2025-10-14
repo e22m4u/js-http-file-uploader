@@ -64,11 +64,13 @@ __name(moveFile, "moveFile");
 
 // dist/esm/utils/remove-file.js
 var import_fs2 = require("fs");
-async function removeFile(pathName) {
+async function removeFile(pathName, silent = false) {
   try {
     await import_fs2.promises.rm(pathName, { recursive: true, force: true });
   } catch (error) {
     console.error(`Failed to remove ${pathName}:`, error);
+    if (!silent)
+      throw error;
   }
 }
 __name(removeFile, "removeFile");
@@ -99,13 +101,12 @@ __name(createError, "createError");
 
 // dist/esm/utils/create-directory.js
 var import_fs3 = require("fs");
-var import_js_format2 = require("@e22m4u/js-format");
 async function createDirectory(pathName) {
   try {
     await import_fs3.promises.mkdir(pathName, { recursive: true });
   } catch (error) {
     console.error(error);
-    throw new import_js_format2.Errorf("Failed to create directory %v.", pathName);
+    throw new Error("Failed to create directory.");
   }
 }
 __name(createDirectory, "createDirectory");
@@ -454,11 +455,11 @@ var _LocalFileUploader = class _LocalFileUploader extends DebuggableService {
       debug("Cleaning up created directories.");
       await Promise.all(createdResourceDirs.map((dir) => {
         debug("Removing directory %v.", dir);
-        return removeFile(dir);
+        return removeFile(dir, true);
       }));
       await Promise.all(files.map((file) => {
         debug("Removing temporary file %v.", file.filepath);
-        return removeFile(file.filepath);
+        return removeFile(file.filepath, true);
       }));
       debug("Cleanup finished.");
       throw error;
